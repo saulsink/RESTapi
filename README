@@ -1,0 +1,49 @@
+Requirements
+
+Create REST service and it’s documentation on platform .NET core  with following features:
+
+    List object records from memory
+    Stores arbitrary object into memory
+    Deletes selected object
+    Returns requested object
+
+--------------------------------------------
+
+About solution
+
+Decisions:
+
+* It is a ASP.NET Core WEB application;
+* Models are separated in ClassLibrary as well as some unit tests in UnitTests;
+* For data storage in memory - Redis is used;
+* No requirements for entities, so "Employee" as entity was freely chosen;
+* For API messaging the "application/json" was chosen;
+* For API documentation Swagger is used. All important parts are covered with comments;
+
+Structure:
+* Three projects in one solution: EmployessWebApplication, ClassLibrary, UnitTests.
+* API URL: http://localhost:49903/api/employees
+
+EmployessWebApplication:
+* Startup.cs contains all configurations like dependency injections;
+* Contains one controller for handling Employee entity requests;
+* Controller uses HTTP response codes for feedback, like 404 or 201;
+* Controller uses one of the Employee repositories from ClassLibrary;
+* URL for API docs: http://localhost:49903/swagger/;
+
+ClassLibrary:
+* Entity is abstract class which all entities should extend;
+* Employee class defines a few Employee attributes and extends Entity;
+* IEmployeeRepository interface defines what methods should Employee repository to have;
+* EmployeeRedisRepository and EmployeeTestRepository both uses IEmployeeRepository interface;
+* Both repositories uses Hash table / Dictionary data structure where keys are Employee Id;
+
+UnitTests:
+* Testing only repositories for some common use cases;
+* In constructor repository type can be switched;
+
+Important dependencies:
+* redis-64 - Redis;
+* Swashbuckle.AspNetCore - Swagger;
+* Newtonsoft.Json - for (de)serialization;
+* ServiceStack.Redis.Core - strong-typed Redis client;
